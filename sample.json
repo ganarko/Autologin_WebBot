@@ -1,0 +1,33 @@
+{
+  "site-to-used": "browser",
+  "websites":
+  {
+    "company_attendence":
+    {
+      "headless": "no",
+      "url": "https://attendence.portal.com/markAttendance/",
+      "username": "employee@comany.id",
+      "password": "employee_attendance_password",
+      "password_cmd": "pass github/push_token",
+      "username_field": "name_of_usernamefield",
+      "password_field": "name_of_passwordfield",
+      "login_button": "punch_inbutton",
+      "logout_button": "punch_outbutton",
+      "condition": "True"
+    },
+    "browser":
+    {
+      "headless": "no",
+      "url": "https://www.browserstack.com/users/sign_in",
+      "username": "user@email.com",
+      "password": "user_password",
+      "password_cmd": "pass github/push_token",
+      "username_field": "user[login]",
+      "password_field": "user[password]",
+      "login_button": "user_submit",
+      "logout_button": "",
+      "condition": ""
+    }
+  },
+  "other_options": {}
+}

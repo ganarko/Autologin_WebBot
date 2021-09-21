@@ -3,9 +3,9 @@ import subprocess
 from sys import exit
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-# System Requirement
+
+# System Requirement, show pop up messages
 import pyautogui as pag
-# import webbrowser
 
 
 APP_DIR = os.path.expanduser("~")+"/Apps/Web_Bot/"
@@ -14,6 +14,7 @@ config_file = APP_DIR + "sample.json"
 log_file = APP_DIR + "std.log"
 driver_path = APP_DIR+"drivers/geckodriver"
 
+# For Logging
 logging.basicConfig(filename= log_file, format='%(asctime)s | %(message)s', filemode='w')
 
 logger = logging.getLogger()
@@ -38,7 +39,7 @@ def main():
 def login_bot(site, url, user, passwd, userField, passwordField, signin, signout, condition):
 
     if not os.path.exists(driver_path):
-        pag.alert(text="No Firefox Driver Found in: /drivers/ Directory", title="Driver Not Found")
+        pag.alert(text="No Firefox Driver Found in: /drivers/ Directory!", title="Driver Not Found")
         exit(0)
 
     if HEADLESS=="yes":
@@ -72,16 +73,16 @@ def login_bot(site, url, user, passwd, userField, passwordField, signin, signout
 
     if (condition == "True"):
         logger.info("Logging In")
-        # login.click()
+        login.click()
         logger.info("Logged In")
     elif (condition == "False"):
         logout = driver.find_element_by_id(signout)
         logger.info("Logging Out")
-        # logout.click()
+        logout.click()
         logger.info("Logged Out")
     else:
         logger.info("No Condition identified, Logging In")
-        # login.click()
+        login.click()
         return
 
     logger.info("Condition was identified")
@@ -136,7 +137,7 @@ def set_config():
         # Credentials for that Site from Site Object
         username = site_config["username"]
         password = site_config["password"]
-        # More Secure way is to get Password over runtime from a Dynamic Command,
+        # More Secure way is to get the Password over runtime from a Dynamic Command,
         # example: pass Browserstack/password (pass tool in Ubuntu)
         # pass_command = site_config["password_cmd"]
         # password =subprocess.getoutput(pass_command)
@@ -159,7 +160,6 @@ def set_config():
     conf.close()
 
     return (site_to_use, url, username, password, username_field, password_field, login, logout, condition)
-
 
 if __name__ == '__main__':
     main()

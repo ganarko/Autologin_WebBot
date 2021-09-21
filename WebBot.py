@@ -4,17 +4,15 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 # System Requirement
 import pyautogui as pag
-import webbrowser
+# import webbrowser
 
 
-APP_DIR = os.path.expanduser("~")+"/Apps/WebBot/"
+APP_DIR = os.path.expanduser("~")+"/Apps/Web_Bot/"
 
-config_file = APP_DIR + "config.json"
+config_file = APP_DIR + "sample.json"
 log_file = APP_DIR + "std.log"
 driver_path = APP_DIR+"drivers/geckodriver"
 
-HEADLESS = "no"
-FINAL_END_POINT = ""
 logging.basicConfig(filename= log_file, format='%(asctime)s | %(message)s', filemode='w')
 
 logger = logging.getLogger()
@@ -39,7 +37,7 @@ def main():
 def login_bot(site, url, user, passwd, userField, passwordField, signin, signout, condition):
 
     if not os.path.exists(driver_path):
-        pag.alert(text="No Firefox Driver Found in: home/Apps/WebBot/drivers/", title="Driver Not Found")
+        pag.alert(text="No Firefox Driver Found in: /drivers/ Directory", title="Driver Not Found")
         exit(0)
 
     if HEADLESS=="yes":
@@ -72,28 +70,22 @@ def login_bot(site, url, user, passwd, userField, passwordField, signin, signout
         exit(0)
 
     if (condition == "True"):
-        condition = True
+        logger.info("Logging In")
+        # login.click()
+        logger.info("Logged In")
     elif (condition == "False"):
-        condition = False
+        logout = driver.find_element_by_id(signout)
+        logger.info("Logging Out")
+        # logout.click()
+        logger.info("Logged Out")
     else:
         logger.info("No Condition identified, Logging In")
-        login.click()
+        # login.click()
         return
 
     logger.info("Condition was identified")
 
-    if condition:
-        logger.info("Logging In")
-        login.click()
-        logger.info("Logged In")
-    else:
-        logout = driver.find_element_by_id(signout)
-        logger.info("Logging Out")
-        logout.click()
-        logger.info("Logged Out")
-
-    change_condition(site,condition)
-
+    # change_condition(site,condition)
 
 def change_condition(site,condition):
 
@@ -123,22 +115,29 @@ def set_config():
     config = dict(json.load(conf))
 
     try:
-        site_to_used = config["site-to-used"]
-        site_config = config["websites"][site_to_used]
+        site_to_use = config["site-to-used"]
+        site_config = config["websites"][site_to_use]
 
-        msg = "Site in use " + site_to_used
+        msg = "Site in use " + site_to_use
         logger.info(msg)
 
         global HEADLESS
         HEADLESS = site_config["headless"]
-        if HEADLESS=="yes":
+        if "dashboard" in site_config.keys() and site_config["dashboard"] != "null":
             global FINAL_END_POINT
             FINAL_END_POINT = site_config["dashboard"]
 
-
+        # Site Url from Site Object in Sample Config File
         url = site_config["url"]
+
+        # Credentials for that Site from Site Object
         username = site_config["username"]
         password = site_config["password"]
+        # More Secure way is to get Password over runtime from a Dynamic Command
+        # pass_command = site_config["password_cmd"] example: pass Browserstack/password (pass tool in Ubuntu)
+        # password =subprocess.getoutput(pass_command)
+
+        # Field paramaters of the Web Page to be logged/Signed in
         username_field = site_config["username_field"]
         password_field = site_config["password_field"]
         login = site_config["login_button"]
@@ -146,6 +145,7 @@ def set_config():
         condition = site_config["condition"]
 
         logger.info("Site Config Options were Set")
+
     except Exception:
         logger.warning("Bad Format Config File")
         pag.alert(text="Invalid/Bad Format Config File \n in: home/Apps/WebBot/config.json", title="Bad Config File")
@@ -154,7 +154,7 @@ def set_config():
 
     conf.close()
 
-    return (site_to_used,url,username,password,username_field,password_field,login,logout,condition)
+    return (site_to_use, url, username, password, username_field, password_field, login, logout, condition)
 
 
 if __name__ == '__main__':

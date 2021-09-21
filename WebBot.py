@@ -1,4 +1,5 @@
 import os,json,logging
+import subprocess
 from sys import exit
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -85,6 +86,9 @@ def login_bot(site, url, user, passwd, userField, passwordField, signin, signout
 
     logger.info("Condition was identified")
 
+    # Changes LogIn-LogOut Condition for the site that needs to be Logged out before next LogIN
+    # usecase: Punch In-Out Attendence
+
     # change_condition(site,condition)
 
 def change_condition(site,condition):
@@ -110,7 +114,6 @@ def set_config():
         logger.warning("Terminated")
         exit(0)
 
-
     conf = open(config_file, 'r')
     config = dict(json.load(conf))
 
@@ -133,8 +136,9 @@ def set_config():
         # Credentials for that Site from Site Object
         username = site_config["username"]
         password = site_config["password"]
-        # More Secure way is to get Password over runtime from a Dynamic Command
-        # pass_command = site_config["password_cmd"] example: pass Browserstack/password (pass tool in Ubuntu)
+        # More Secure way is to get Password over runtime from a Dynamic Command,
+        # example: pass Browserstack/password (pass tool in Ubuntu)
+        # pass_command = site_config["password_cmd"]
         # password =subprocess.getoutput(pass_command)
 
         # Field paramaters of the Web Page to be logged/Signed in
